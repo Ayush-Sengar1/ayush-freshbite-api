@@ -1,0 +1,11 @@
+const {store,id,now,ensureSeedData}=require('../data/store');ensureSeedData();
+const publicDish=d=>({...d,category:store.categories.find(c=>c.slug===d.categorySlug)||null});
+function listDishes(query={}){let list=store.dishes.filter(d=>!d.archived);const q=String(query.search||'').trim().toLowerCase();if(q)list=list.filter(d=>(d.name+' '+d.description+' '+d.ingredients.join(' ')+' '+d.tags.join(' ')).toLowerCase().includes(q));if(query.category&&query.category!=='all')list=list.filter(d=>d.categorySlug===query.category);if(query.vegetarian==='true')list=list.filter(d=>d.isVegetarian);if(query.bestseller==='true')list=list.filter(d=>d.isBestseller);if(query.available==='true')list=list.filter(d=>d.available);if(query.minPrice)list=list.filter(d=>(d.discountPrice||d.price)>=Number(query.minPrice));if(query.maxPrice)list=list.filter(d=>(d.discountPrice||d.price)<=Number(query.maxPrice));if(query.sort==='price_asc')list.sort((a,b)=>a.price-b.price);else if(query.sort==='price_desc')list.sort((a,b)=>b.price-a.price);else if(query.sort==='rating')list.sort((a,b)=>b.rating-a.rating);else list.sort((a,b)=>Number(b.isBestseller)-Number(a.isBestseller));const page=Math.max(1,Number(query.page||1)),limit=Math.min(48,Math.max(1,Number(query.limit||24)));return {items:list.slice((page-1)*limit,page*limit).map(publicDish),total:list.length,page,limit,pages:Math.ceil(list.length/limit)}}
+function getDish(idOrSlug){return store.dishes.find(d=>!d.archived&&(d._id===idOrSlug||d.slug===idOrSlug))}
+function userByEmail(email){return store.users.find(u=>u.email===email.toLowerCase())}
+function userById(uid){return store.users.find(u=>u._id===uid)}
+function saveUser(data){const u={_id:id(),createdAt:now(),...data};store.users.push(u);return u}
+function cartFor(userId){let c=store.carts.find(x=>x.userId===userId);if(!c){c={_id:id(),userId,items:[],updatedAt:now()};store.carts.push(c)}return c}
+function addressList(userId){return store.addresses.filter(a=>a.userId===userId).sort((a,b)=>Number(b.isDefault)-Number(a.isDefault))}
+function orderById(userId,orderId){return store.orders.find(o=>o.userId===userId&&o._id===orderId)}
+module.exports={store,id,now,publicDish,listDishes,getDish,userByEmail,userById,saveUser,cartFor,addressList,orderById};
