@@ -1,0 +1,2 @@
+require('dotenv').config();
+module.exports={port:Number(process.env.PORT||4100),nodeEnv:process.env.NODE_ENV||'development',clientUrl:process.env.CLIENT_URL||'http://127.0.0.1:4174',mongoUri:process.env.MONGODB_URI||'',jwtSecret:process.env.JWT_SECRET||'development-only-change-me',cookieName:process.env.COOKIE_NAME||'freshbite_token',isProduction:process.env.NODE_ENV==='production',razorpayKeyId:process.env.RAZORPAY_KEY_ID||'',razorpayKeySecret:process.env.RAZORPAY_KEY_SECRET||''};
