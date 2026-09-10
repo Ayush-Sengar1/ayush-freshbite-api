@@ -1,0 +1,1 @@
+const {store,id,now}=require('../data/store');function record(actor,action,entityType,entityId,metadata={}){store.auditLogs.unshift({_id:id(),actor,action,entityType,entityId,metadata,createdAt:now()})}module.exports={record};
