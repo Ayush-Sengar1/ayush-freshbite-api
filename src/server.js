@@ -1,0 +1,1 @@
+const app=require('./app');const env=require('./config/env');const {connectDatabase}=require('./config/database');(async()=>{await connectDatabase();app.listen(env.port,()=>console.log('FreshBite API running at http://127.0.0.1:'+env.port))})();
