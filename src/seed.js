@@ -1,0 +1,1 @@
+const {ensureSeedData,store}=require('./data/store');ensureSeedData();console.log('Seed ready. Admin: admin@freshbite.in / admin12345. Categories:',store.categories.length,'Dishes:',store.dishes.length);process.exit(0);
